@@ -1,28 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApiEstacionamento.Models
 {
     public class Veiculo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id {get; set; }
-        [Required]
-        public string Placa {get; set; }
-        [Required]
-        public string Modelo {get; set; }
-        [Required]
-        public string Cor {get; set; }
+        public int Id { get; set; }
 
-        [ForeignKey("Cliente")]
-        public int? ClienteId {get; set; }
+        [Required]
+        public string Placa { get; set; }
+
+        [Required]
+        public string Modelo { get; set; }
+    
+        [Required]
+        public string Cor { get; set; }
+
         
-        public Cliente Cliente {get; set; }
+        public int ClienteId { get; set; }
+        public Cliente Cliente { get; set; }
+
+        
+        public List<Ticket> Tickets { get; set; }
     }
 }

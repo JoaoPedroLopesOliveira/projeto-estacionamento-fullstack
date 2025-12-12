@@ -1,19 +1,50 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ApiEstacionamento.Models;
 
 namespace ApiEstacionamento.DbContext
 {
     public class EstacionamentoContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        public EstacionamentoContext (Microsoft.EntityFrameworkCore.DbContextOptions<EstacionamentoContext> options)
+        public EstacionamentoContext(DbContextOptions<EstacionamentoContext> options)
             : base(options)
         {
         }
 
-        public Microsoft.EntityFrameworkCore.DbSet<ApiEstacionamento.Models.Cliente> Clientes { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<ApiEstacionamento.Models.Veiculo> Veiculos { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<ApiEstacionamento.Models.Administrador> Administradores { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Veiculo> Veiculos { get; set; }
+        public DbSet<Plano> Planos { get; set; }
+        public DbSet<ClientePlano> ClientesPlanos { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<EstacionamentoConfig> Estacionamentos { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Cliente 1:N Veículos
+            modelBuilder.Entity<Cliente>()
+                .HasMany(c => c.Veiculos)
+                .WithOne(v => v.Cliente)
+                .HasForeignKey(v => v.ClienteId);
+
+            // Cliente 1:N Planos
+            modelBuilder.Entity<Cliente>()
+                .HasMany(c => c.PlanosAtivos)
+                .WithOne(cp => cp.Cliente)
+                .HasForeignKey(cp => cp.ClienteId);
+
+            // Plano 1:N ClientePlano
+            modelBuilder.Entity<Plano>()
+                .HasMany(p => p.ClientesComEstePlano)
+                .WithOne(cp => cp.Plano)
+                .HasForeignKey(cp => cp.PlanoId);
+
+            // EstacionamentoConfig 1:N Planos
+            modelBuilder.Entity<EstacionamentoConfig>()
+                .HasMany(e => e.Planos)
+                .WithOne(p => p.EstacionamentoConfig)
+                .HasForeignKey(p => p.EstacionamentoConfigId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
