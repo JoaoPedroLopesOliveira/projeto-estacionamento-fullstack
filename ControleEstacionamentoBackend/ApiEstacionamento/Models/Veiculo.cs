@@ -18,8 +18,8 @@ namespace ApiEstacionamento.Models
         public string Cor { get; set; }
 
         
-        public int ClienteId { get; set; }
-        public Cliente Cliente { get; set; }
+        public int? ClienteId { get; set; }
+        public Cliente? Cliente { get; set; }
 
         
         public List<Ticket> Tickets { get; set; }
