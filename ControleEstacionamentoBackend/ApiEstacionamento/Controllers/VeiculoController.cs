@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc; 
 
 namespace ApiEstacionamento.Controllers
@@ -19,6 +20,7 @@ namespace ApiEstacionamento.Controllers
             _veiculoService = veiculoService;
         }
        [HttpPost]
+       [Authorize(Roles = "MASTER,COMUM")]
         public async Task<IActionResult> CreateVeiculo([FromBody] VeiculoCreateDTO veiculoCreateDTO)
         {
             var veiculo = await _veiculoService.CreateVeiculoAsync(veiculoCreateDTO);
@@ -26,12 +28,13 @@ namespace ApiEstacionamento.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "MASTER,COMUM")]
         public async Task<IActionResult> UpdateVeiculo(int id, [FromBody] VeiculoUpdateDTO veiculoUpdateDTO)
         {
             var updatedVeiculo = await _veiculoService.UpdateVeiculoAsync(id, veiculoUpdateDTO);
             if (updatedVeiculo == null)
             {
-                return NotFound();
+                throw new Exception("Veículo não encontrado.");
             }
             return Ok(updatedVeiculo);
         }
@@ -50,16 +53,17 @@ namespace ApiEstacionamento.Controllers
             var veiculo = await _veiculoService.GetVeiculoByIdAsync(id);
             if (veiculo == null)
             {
-                return NotFound();
+                throw new Exception("Veículo não encontrado.");
             }
             return Ok(veiculo);
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "MASTER,COMUM")]
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _veiculoService.DeleteVeiculoByIdAsync(id);
-            if (!deleted) return NotFound();
+            if (!deleted) throw new Exception("Veículo não encontrado.");
             return NoContent();
         }
 

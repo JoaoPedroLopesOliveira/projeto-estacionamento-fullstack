@@ -7,5 +7,7 @@ public class MappingProfile : Profile
     {
         CreateMap<VeiculoCreateDTO, Veiculo>();
         CreateMap<Veiculo, VeiculoResponseDTO>();
+        CreateMap<AdministradorCreateDTO, Administrador>();
+        CreateMap<Administrador, AdministradorResponseDTO>();
     }
 }

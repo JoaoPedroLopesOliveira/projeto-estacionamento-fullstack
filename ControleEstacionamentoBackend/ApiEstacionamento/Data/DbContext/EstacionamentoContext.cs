@@ -16,6 +16,7 @@ namespace ApiEstacionamento.DbContext
         public DbSet<ClientePlano> ClientesPlanos { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<EstacionamentoConfig> Estacionamentos { get; set; }
+        public DbSet<Administrador> Administradores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
