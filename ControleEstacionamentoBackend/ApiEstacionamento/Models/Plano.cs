@@ -17,8 +17,10 @@ namespace ApiEstacionamento.Models
         [Required]
         public decimal Preco { get; set; }
 
-        public int VeiculosPermitidos { get; set; }
-
+        public int QuantidadeVeiculosPermitidos { get; set; }
+        
+        [Required]
+        public string Description {get; set;}
         
         // Relacionamentos
         // Nullable para permitir planos globais

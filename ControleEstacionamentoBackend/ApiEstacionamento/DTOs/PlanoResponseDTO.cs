@@ -12,7 +12,9 @@ namespace ApiEstacionamento.DTOs
         public string Tipo { get; set; }
         public decimal Preco { get; set; }
 
-        public int VeiculosPermitidos { get; set; }
+        public int QuantidadeVeiculosPermitidos { get; set; }
+
+        public string Description {get; set;}
 
         public int EstacionamentoConfigId { get; set; }
     }

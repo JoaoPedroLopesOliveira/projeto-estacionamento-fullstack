@@ -11,12 +11,17 @@ namespace ApiEstacionamento.DTOs
         [Required]
         public string Nome { get; set; }
         [Required]
+        //tipo: mensal/semanal
         public string Tipo { get; set; }
         [Required]
         public decimal Preco { get; set; }
 
+        //quantidade
         public int VeiculosPermitidos { get; set; }
 
+        public string Description {get;set;}
+
+        //null para ser valido em todos os estacionamentos
         public int? EstacionamentoConfigId { get; set; }
     }
 }

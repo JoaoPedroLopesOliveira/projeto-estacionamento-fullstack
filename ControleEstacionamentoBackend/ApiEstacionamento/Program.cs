@@ -8,13 +8,14 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;using ApiEstacionamento.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IPlanoService, PlanoService>();
 builder.Services.AddScoped<IVeiculoService, VeiculosService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IAdministradorService, AdministradorService>();

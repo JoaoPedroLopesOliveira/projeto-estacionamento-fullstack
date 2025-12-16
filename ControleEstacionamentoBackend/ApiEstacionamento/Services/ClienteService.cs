@@ -21,6 +21,51 @@ namespace ApiEstacionamento.Services
             _mapper = (Mapper)mapper;
         }
 
+        public Task<ClienteResponseDTO> CreateClienteAsync(ClienteCreateDTO clienteCreateDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteCliente(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ClienteResponseDTO> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ClienteResponseDTO> GetClienteAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<bool> RemoverPlanoDoCliente(int idCliente)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<VeiculoResponseDTO>> RemoverVeiculoDoCliente(int idCliente, int Idveiculo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ClienteResponseDTO> UpdateClienteAsync(int id, ClienteUpdateDTO clienteUpdateDTO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PlanoResponseDTO> VinculaNovoPlanoAoCliente(int idCliente, int IdPlano)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<VeiculoResponseDTO>> VinculaNovoVeiculoAoCliente(int idCliente, int Idveiculo)
+        {
+            throw new NotImplementedException();
+        }
         public async Task<List<VeiculoResponseDTO>> GetVeiculosDoClienteAsync(int ClienteId)
         {
             var clienteExiste = await _context.Clientes.AnyAsync(c => c.Id == ClienteId);

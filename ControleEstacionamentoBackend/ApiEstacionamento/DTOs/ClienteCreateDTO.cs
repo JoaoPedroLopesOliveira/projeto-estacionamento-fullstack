@@ -16,6 +16,5 @@ namespace ApiEstacionamento.DTOs
         [Required]
         public string Telefone { get; set; }
 
-        public List<VeiculoCreateDTO> Veiculos { get; set; }
     }
 }

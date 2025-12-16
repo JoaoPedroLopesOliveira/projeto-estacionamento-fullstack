@@ -36,15 +36,15 @@ namespace ApiEstacionamento.Services
             return _mapper.Map<AdministradorResponseDTO>(adm);
         }
 
-        public Task<bool> DeleteAdministradorByIdAsync(int id)
+        public async Task<bool> DeleteAdministradorByIdAsync(int id)
         {
-            var administrador = _context.Administradores.FirstOrDefault(a => a.Id == id);
+            var administrador = await _context.Administradores.FirstOrDefaultAsync(a => a.Id == id);
             if (administrador == null)
             {
                 throw new Exception("Administrador não encontrado.");
             }
             _context.Administradores.Remove(administrador);
-            return _context.SaveChangesAsync().ContinueWith(t => t.Result > 0);
+            return await _context.SaveChangesAsync().ContinueWith(t => t.Result > 0);
         }
 
         public async Task<AdministradorResponseDTO> GetAdministradorByIdAsync(int id)
