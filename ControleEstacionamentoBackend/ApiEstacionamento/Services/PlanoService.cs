@@ -73,6 +73,10 @@ namespace ApiEstacionamento.Services
             {
                 plano.Description = planoUpdateDTO.Description;
             }
+            if (planoUpdateDTO.localizacoesPermitidas != null)
+            {
+                plano.localizacoesPermitidas = planoUpdateDTO.localizacoesPermitidas;
+            }
             await _contexto.SaveChangesAsync();
             return _mapper.Map<PlanoResponseDTO>(plano);
         }
@@ -84,6 +88,7 @@ namespace ApiEstacionamento.Services
                 return false;
             }
             _contexto.Planos.Remove(plano);
+            await _contexto.SaveChangesAsync();
             return true;
         }
     }

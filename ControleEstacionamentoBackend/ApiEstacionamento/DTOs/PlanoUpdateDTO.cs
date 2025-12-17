@@ -22,6 +22,8 @@ namespace ApiEstacionamento.DTOs
 
         //null para ser valido em todos os estacionamentos
         public EstacionamentoConfig? estacionamentoConfig;
+
+        public List<string> localizacoesPermitidas {get;set;}
         
     }
 }

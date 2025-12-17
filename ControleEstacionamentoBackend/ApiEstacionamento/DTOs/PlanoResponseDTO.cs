@@ -17,5 +17,6 @@ namespace ApiEstacionamento.DTOs
         public string Description {get; set;}
 
         public int EstacionamentoConfigId { get; set; }
+        public List<string> localizacoes {get;set;}
     }
 }

@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IEstacionamentoService, EstacionamentoService>();
 builder.Services.AddScoped<IPlanoService, PlanoService>();
 builder.Services.AddScoped<IVeiculoService, VeiculosService>();
 builder.Services.AddScoped<AuthService>();
