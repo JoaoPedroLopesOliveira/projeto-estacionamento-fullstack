@@ -20,6 +20,6 @@ namespace ApiEstacionamento.Models
 
         public List<Veiculo> Veiculos { get; set; }
 
-        public List<ClientePlano> PlanosAtivos { get; set; }
+        public List<ClientePlano> HistoricoDePlanos { get; set; }
     }
 }

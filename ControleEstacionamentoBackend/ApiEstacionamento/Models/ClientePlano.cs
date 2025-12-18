@@ -18,7 +18,7 @@ namespace ApiEstacionamento.Models
         public Plano Plano { get; set; }
         
         public DateTime Inicio { get; set; }
-        public DateTime Fim { get; set; }
+        public DateTime? Fim { get; set; }
 
         public bool Ativo { get; set; }
     }

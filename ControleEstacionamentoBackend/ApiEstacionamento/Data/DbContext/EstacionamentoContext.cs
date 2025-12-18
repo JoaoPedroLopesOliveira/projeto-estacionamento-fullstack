@@ -30,7 +30,7 @@ namespace ApiEstacionamento.DbContext
 
             // Cliente 1:N Planos
             modelBuilder.Entity<Cliente>()
-                .HasMany(c => c.PlanosAtivos)
+                .HasMany(c => c.HistoricoDePlanos)
                 .WithOne(cp => cp.Cliente)
                 .HasForeignKey(cp => cp.ClienteId);
 
@@ -46,6 +46,20 @@ namespace ApiEstacionamento.DbContext
                 .WithOne(p => p.EstacionamentoConfig)
                 .HasForeignKey(p => p.EstacionamentoConfigId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // 🔥 CONFIGURAÇÃO DE DECIMAIS (ESSENCIAL)
+            modelBuilder.Entity<Plano>()
+                .Property(p => p.Preco)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<EstacionamentoConfig>()
+                .Property(e => e.PrecoPorHora)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<Ticket>()
+                .Property(t => t.ValorFinal)
+                .HasPrecision(10, 2);
         }
+
     }
 }
