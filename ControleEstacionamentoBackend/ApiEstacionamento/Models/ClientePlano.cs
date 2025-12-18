@@ -16,7 +16,6 @@ namespace ApiEstacionamento.Models
         
         public int PlanoId { get; set; }
         public Plano Plano { get; set; }
-
         
         public DateTime Inicio { get; set; }
         public DateTime Fim { get; set; }
