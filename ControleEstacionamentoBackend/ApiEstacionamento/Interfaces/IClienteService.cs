@@ -15,9 +15,9 @@ namespace ApiEstacionamento.Interfaces
 
         public Task<bool> DeleteCliente(int id);
 
-        public Task<ClienteResponseDTO> GetAllAsync();
+        public Task<List<ClienteResponseDTO>> GetAllAsync();
 
-        public Task<ClienteResponseDTO> GetClienteAsync();
+        public Task<ClienteResponseDTO> GetClienteAsync(int id);
 
         public Task<List<VeiculoResponseDTO>> VinculaNovoVeiculoAoCliente(int idCliente, int Idveiculo);
         public Task<PlanoResponseDTO> VinculaNovoPlanoAoCliente(int idCliente, int IdPlano);

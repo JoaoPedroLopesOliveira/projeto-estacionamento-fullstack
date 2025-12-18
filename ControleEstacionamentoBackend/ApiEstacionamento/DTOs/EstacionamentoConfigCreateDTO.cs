@@ -5,14 +5,12 @@ using System.Threading.Tasks;
 
 namespace ApiEstacionamento.DTOs
 {
-    public class EstacionamentoConfigResponseDTO
+    public class EstacionamentoConfigCreateDTO
     {
-        public int Id { get; set; }
         public string Localizacao { get; set; }
         public int CapacidadeMaxima { get; set; }
         public decimal PrecoHora { get; set; }
         public TimeSpan HorarioAbertura { get; set; }
         public TimeSpan HorarioFechamento { get; set; }
-       
     }
 }

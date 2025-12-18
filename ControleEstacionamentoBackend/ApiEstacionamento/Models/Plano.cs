@@ -24,7 +24,11 @@ namespace ApiEstacionamento.Models
         
         // Relacionamentos
         // Nullable para permitir planos globais
+        // Estacionamentos permitidos por ID
         public int? EstacionamentoConfigId { get; set; }
+
+        // Estacionamento permitidos por localização
+        public List<string> localizacoesPermitidas {get; set;}
         public EstacionamentoConfig EstacionamentoConfig { get; set; }
 
         public List<ClientePlano> ClientesComEstePlano { get; set; }

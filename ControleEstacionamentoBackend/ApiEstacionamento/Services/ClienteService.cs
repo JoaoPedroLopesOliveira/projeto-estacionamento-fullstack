@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ApiEstacionamento.DbContext;
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Interfaces;
+using ApiEstacionamento.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,24 +22,62 @@ namespace ApiEstacionamento.Services
             _mapper = (Mapper)mapper;
         }
 
-        public Task<ClienteResponseDTO> CreateClienteAsync(ClienteCreateDTO clienteCreateDTO)
+        public async Task<ClienteResponseDTO> CreateClienteAsync(ClienteCreateDTO clienteCreateDTO)
         {
-            throw new NotImplementedException();
+            var cliente = _mapper.Map<Cliente>(clienteCreateDTO);
+            _context.Clientes.Add(cliente);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<ClienteResponseDTO>(cliente);
         }
 
-        public Task<bool> DeleteCliente(int id)
+        public async Task<bool> DeleteCliente(int id)
         {
-            throw new NotImplementedException();
+            var cliente = await _context.Clientes.FindAsync(id);
+            if(cliente == null)
+            {
+                return false;
+            }
+            _context.Clientes.Remove(cliente);
+            return true;
         }
 
-        public Task<ClienteResponseDTO> GetAllAsync()
+        public async Task<List<ClienteResponseDTO>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var clientes = await _context.Clientes.ToListAsync();
+            return _mapper.Map<List<ClienteResponseDTO>>(clientes);
         }
 
-        public Task<ClienteResponseDTO> GetClienteAsync()
+        public async Task<ClienteResponseDTO> GetClienteAsync(int id)
         {
-            throw new NotImplementedException();
+            var cliente = await _context.Clientes.FindAsync(id);
+            if(cliente == null)
+            {
+                return null;
+            }
+            return _mapper.Map<ClienteResponseDTO>(cliente);
+        }
+        public async Task<ClienteResponseDTO> UpdateClienteAsync(int id, ClienteUpdateDTO clienteUpdateDTO)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+            if(cliente == null)
+            {
+                return null;
+            }
+            if (!string.IsNullOrEmpty(clienteUpdateDTO.Nome))
+            {
+                cliente.Nome = clienteUpdateDTO.Nome;
+            }
+            if (!string.IsNullOrEmpty(clienteUpdateDTO.Cpf))
+            {
+                cliente.Cpf = clienteUpdateDTO.Cpf;
+            }
+            if (!string.IsNullOrEmpty(clienteUpdateDTO.Telefone))
+            {
+                cliente.Telefone = clienteUpdateDTO.Telefone;
+            }
+            _context.Clientes.Update(cliente);
+            _context.SaveChanges();
+            return _mapper.Map<ClienteResponseDTO>(cliente);
         }
 
 
@@ -52,10 +91,6 @@ namespace ApiEstacionamento.Services
             throw new NotImplementedException();
         }
 
-        public Task<ClienteResponseDTO> UpdateClienteAsync(int id, ClienteUpdateDTO clienteUpdateDTO)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<PlanoResponseDTO> VinculaNovoPlanoAoCliente(int idCliente, int IdPlano)
         {

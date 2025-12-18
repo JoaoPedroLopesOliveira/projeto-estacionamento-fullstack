@@ -23,5 +23,8 @@ namespace ApiEstacionamento.DTOs
 
         //null para ser valido em todos os estacionamentos
         public int? EstacionamentoConfigId { get; set; }
+
+        //localizações que o plano é valido 
+        public List<string> localizacoes {get;set;}
     }
 }

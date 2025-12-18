@@ -13,5 +13,7 @@ public class MappingProfile : Profile
         CreateMap<Cliente, ClienteResponseDTO>();
         CreateMap<Plano, PlanoResponseDTO>();
         CreateMap<PlanoCreateDTO, Plano>();
+        CreateMap<EstacionamentoConfig, EstacionamentoConfigResponseDTO>();
+        CreateMap<EstacionamentoConfigCreateDTO, EstacionamentoConfig>();
     }
 }
