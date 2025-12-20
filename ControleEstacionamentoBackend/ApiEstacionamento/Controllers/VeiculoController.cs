@@ -20,7 +20,7 @@ namespace ApiEstacionamento.Controllers
             _veiculoService = veiculoService;
         }
        [HttpPost]
-       [Authorize(Roles = "MASTER,COMUM")]
+       //[Authorize(Roles = "MASTER,COMUM")]
         public async Task<IActionResult> CreateVeiculo([FromBody] VeiculoCreateDTO veiculoCreateDTO)
         {
             var veiculo = await _veiculoService.CreateVeiculoAsync(veiculoCreateDTO);
@@ -28,7 +28,7 @@ namespace ApiEstacionamento.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "MASTER,COMUM")]
+        //[Authorize(Roles = "MASTER,COMUM")]
         public async Task<IActionResult> UpdateVeiculo(int id, [FromBody] VeiculoUpdateDTO veiculoUpdateDTO)
         {
             var updatedVeiculo = await _veiculoService.UpdateVeiculoAsync(id, veiculoUpdateDTO);
@@ -59,7 +59,7 @@ namespace ApiEstacionamento.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "MASTER,COMUM")]
+        //[Authorize(Roles = "MASTER,COMUM")]
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _veiculoService.DeleteVeiculoByIdAsync(id);

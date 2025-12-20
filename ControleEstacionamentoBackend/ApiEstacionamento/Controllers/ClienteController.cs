@@ -37,7 +37,7 @@ namespace ApiEstacionamento.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteCliente(int id)
         {
-            var cliente = await _clienteService.DeleteCliente(id);
+            var cliente = await _clienteService.DeleteClienteAsync(id);
             if (!cliente)
             {
                 throw new Exception("Cliente não encontrado.");

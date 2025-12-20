@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Interfaces;
-using ApiEstacionamento.Models;
+using ApiEstacionamento.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiEstacionamento.Controllers
