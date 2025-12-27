@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiEstacionamento.Application.DTOs;
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,7 @@ namespace ApiEstacionamento.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "MASTER")]
+        //[Authorize(Roles = "MASTER")]
         public async Task<IActionResult> CreateAdministrador(AdministradorCreateDTO administradorCreateDTO)
         {
             var administrador = await _administradorService.CreateAdministradorAsync(administradorCreateDTO);
@@ -30,7 +31,7 @@ namespace ApiEstacionamento.Controllers
 
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "MASTER")]
+        //[Authorize(Roles = "MASTER")]
         public async Task<IActionResult> UpdateAdministrador(int id, [FromBody] AdministradorUpdateDTO administradorUpdateDTO)
         {   
             var updatedAdministrador = await _administradorService.UpdateAdministradorAsync(id, administradorUpdateDTO);
@@ -60,7 +61,7 @@ namespace ApiEstacionamento.Controllers
 
         }
         [HttpDelete("{id}")]
-        [Authorize(Roles = "MASTER")]
+        //[Authorize(Roles = "MASTER")]
         public async Task<IActionResult> DeleteAdministrador(int id)
         {
             var deleted = await _administradorService.DeleteAdministradorByIdAsync(id);

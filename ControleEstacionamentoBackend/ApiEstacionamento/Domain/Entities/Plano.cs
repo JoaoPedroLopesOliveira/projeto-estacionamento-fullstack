@@ -1,26 +1,23 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ApiEstacionamento.Domain.Entities;
 
-namespace ApiEstacionamento.Entities
+namespace ApiEstacionamento.Domain.Entities
 {
     public class Plano
     {
-        [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
-        [Required]
-        public string Tipo { get; set; } 
 
-        [Required]
+        public string Tipo { get; set; } = null!;
+
         public decimal Preco { get; set; }
 
         public int QuantidadeVeiculosPermitidos { get; set; }
         
-        [Required]
-        public string Description {get; set;}
+        public string Description {get; set;} = null!;
         
         // Relacionamentos
         // Nullable para permitir planos globais
@@ -28,9 +25,9 @@ namespace ApiEstacionamento.Entities
         public int? EstacionamentoConfigId { get; set; }
 
         // Estacionamento permitidos por localização
-        public List<string> localizacoesPermitidas {get; set;}
-        public EstacionamentoConfig EstacionamentoConfig { get; set; }
+        public List<string> LocalizacoesPermitidas {get; set;} = new();
+        public EstacionamentoConfig EstacionamentoConfig { get; set; } = null!;
 
-        public List<ClientePlano> ClientesComEstePlano { get; set; }
+        public List<ClientePlano> ClientesComEstePlano { get; set; } = new();
     }
 }

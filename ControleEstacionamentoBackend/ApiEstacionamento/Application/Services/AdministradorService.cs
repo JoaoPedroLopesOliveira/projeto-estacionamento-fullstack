@@ -1,93 +1,88 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ApiEstacionamento.DbContext;
+
+using ApiEstacionamento.Application.DTOs;
+using ApiEstacionamento.Domain.Entities;
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Enuns;
 using ApiEstacionamento.Interfaces;
-using ApiEstacionamento.Entities;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using ApiEstacionamento.Domain.Interfaces.Repositories;
+using ApiEstacionamento.Infrastructure.Security;
 
 namespace ApiEstacionamento.Services
 {
     public class AdministradorService : IAdministradorService
     {
 
-        private readonly EstacionamentoContext _context;
-        private readonly Mapper _mapper;
-        public AdministradorService(EstacionamentoContext context, IMapper mapper)
+
+        private readonly IAdministradorRepository _adminRepository;        
+        private readonly IMapper _mapper;
+
+        private readonly IPasswordHasher _passwordHasher = new BCryptPasswordHasher();
+        public AdministradorService(IAdministradorRepository adminRepository, IMapper mapper)
         {
-            _context = context;
-            _mapper = (Mapper)mapper;
+            _adminRepository = adminRepository;
+            _mapper = mapper;
         }
-        
+
         public async Task<AdministradorResponseDTO> CreateAdministradorAsync(AdministradorCreateDTO administradorCreateDTO)
         {
-            var adm = new Administrador
+            var administrador = new Administrador
             {
                 Login = administradorCreateDTO.Login,
-                SenhaHash = BCrypt.Net.BCrypt.HashPassword(administradorCreateDTO.Senha),
-                Nivel = Enum.Parse<Enuns.NivelAdministrador>(administradorCreateDTO.Nivel)
+                SenhaHash = _passwordHasher.Hash(administradorCreateDTO.Senha),
+                Nivel = Enum.Parse<NivelAdministrador>(administradorCreateDTO.Nivel)
             };
-            _context.Administradores.Add(adm);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<AdministradorResponseDTO>(adm);
+            await _adminRepository.CreateAsync(administrador);
+            return _mapper.Map<AdministradorResponseDTO>(administrador);
         }
 
         public async Task<bool> DeleteAdministradorByIdAsync(int id)
         {
-            var administrador = await _context.Administradores.FirstOrDefaultAsync(a => a.Id == id);
+            var administrador = await _adminRepository.GetByIdAsync(id);
             if (administrador == null)
             {
-                throw new Exception("Administrador não encontrado.");
+                return false;
             }
-            _context.Administradores.Remove(administrador);
-            return await _context.SaveChangesAsync().ContinueWith(t => t.Result > 0);
+            await _adminRepository.DeleteAsync(id);
+            return true;
         }
 
         public async Task<AdministradorResponseDTO> GetAdministradorByIdAsync(int id)
         {
-            var administrador = await _context.Administradores.FirstOrDefaultAsync(a => a.Id == id);
-            if (administrador == null)
-            {
-                throw new Exception("Administrador não encontrado.");
-            }
+            var administrador = await _adminRepository.GetByIdAsync(id);
             return _mapper.Map<AdministradorResponseDTO>(administrador);
+        }
+
+        public async Task<Administrador?> GetAdministradorByLoginAsync(string login)
+        {
+            return await _adminRepository.GetByLoginAsync(login);
         }
 
         public async Task<List<AdministradorResponseDTO>> GetAllAdministradoresAsync()
         {
-            var administradores = await _context.Administradores.ToListAsync();
+            var administradores = await _adminRepository.GetAllAsync();
             return _mapper.Map<List<AdministradorResponseDTO>>(administradores);
         }
 
-        public Task<AdministradorResponseDTO> UpdateAdministradorAsync(int id, AdministradorUpdateDTO administradorUpdateDTO)
+        public async Task<AdministradorResponseDTO> UpdateAdministradorAsync(int id, AdministradorUpdateDTO administradorUpdateDTO)
         {
-            var administrador = _context.Administradores.FirstOrDefault(a => a.Id == id);
-            if (administrador == null)
-            {
-                throw new Exception("Administrador não encontrado.");
-            }
-            if (!string.IsNullOrEmpty(administradorUpdateDTO.Login))
-            {
-                administrador.Login = administradorUpdateDTO.Login;
+            var administrador = await _adminRepository.GetByIdAsync(id);
+            if (administrador == null){
+                return null;
             }
             if (!string.IsNullOrEmpty(administradorUpdateDTO.Senha))
             {
                 administrador.SenhaHash = BCrypt.Net.BCrypt.HashPassword(administradorUpdateDTO.Senha);
             }
-            administrador.Nivel = Enum.Parse<Enuns.NivelAdministrador>(administradorUpdateDTO.Nivel);
-            _context.Administradores.Update(administrador);
-            return _context.SaveChangesAsync().ContinueWith(t =>
+            if (!string.IsNullOrEmpty(administradorUpdateDTO.Login))
             {
-                if (t.Result > 0)
-                {
-                    return _mapper.Map<AdministradorResponseDTO>(administrador);
-                }
-                throw new Exception("Erro ao atualizar o administrador.");
-            });
+                administrador.Login = administradorUpdateDTO.Login;
+            }
+            if (!string.IsNullOrEmpty(administradorUpdateDTO.Nivel)){
+                administrador.Nivel = Enum.Parse<NivelAdministrador>(administradorUpdateDTO.Nivel);
+            }
+            await _adminRepository.UpdateAsync(administrador);
+            return _mapper.Map<AdministradorResponseDTO>(administrador);
         }
     }
 }

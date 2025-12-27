@@ -1,0 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace ApiEstacionamento.Infrastructure.Persistence.Entitites
+{
+    public class AdministradorEntity
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id {get; set; }
+        [Required]
+        public string Login {get; set; } = null!;
+        [Required]
+        public string SenhaHash {get; set; } = null!;
+
+        [Required]
+        public Enuns.NivelAdministrador Nivel {get; set; }
+
+        public DateTime DataCriacao {get; set; } = DateTime.UtcNow;
+    }
+}

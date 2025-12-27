@@ -3,88 +3,82 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiEstacionamento.DbContext;
+using ApiEstacionamento.Infrastructure.Persistence.DbContext;
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Interfaces;
-using ApiEstacionamento.Entities;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ApiEstacionamento.Domain.Entities;
+using ApiEstacionamento.Domain.Interfaces.Repositories;
 
 namespace ApiEstacionamento.Services
 {
     public class EstacionamentoService : IEstacionamentoService
     {
 
-        private readonly EstacionamentoContext _contexto;
-        private readonly Mapper _mapper;
+        private readonly IEstacionamentoRepository _estacionamentoRepository;
+        private readonly IMapper _mapper;
 
-        public EstacionamentoService(EstacionamentoContext context, IMapper mapper)
+        public EstacionamentoService(IEstacionamentoRepository estacionamentoRepository, IMapper mapper)
         {
-            _contexto = context;
-            _mapper = (Mapper)mapper;
+            _estacionamentoRepository = estacionamentoRepository;
+            _mapper = mapper;
         }
 
         public async Task<EstacionamentoConfigResponseDTO> CreateEStacionamentoAsync(EstacionamentoConfigCreateDTO estacionamentoCreateDTO)
         {
-            var estacionamento =  _mapper.Map<EstacionamentoConfig>(estacionamentoCreateDTO);
-            _contexto.Estacionamentos.Add(estacionamento);
-            await _contexto.SaveChangesAsync();
+            var estacionamento = _mapper.Map<EstacionamentoConfig>(estacionamentoCreateDTO);
+            await _estacionamentoRepository.CreateAsync(estacionamento);
             return _mapper.Map<EstacionamentoConfigResponseDTO>(estacionamento);
         }
 
         public async Task<bool> DeleteEstacionamento(int id)
         {
-            var estacionamento = await _contexto.Estacionamentos.FindAsync(id);
-            if(estacionamento == null)
+            var estacionamento = _estacionamentoRepository.GetByIdAsync(id);
+            if (estacionamento == null)
             {
                 return false;
             }
-            _contexto.Estacionamentos.Remove(estacionamento);
-            await _contexto.SaveChangesAsync();
+            await _estacionamentoRepository.DeleteAsync(id);
             return true;
-
         }
 
         public async Task<List<EstacionamentoConfigResponseDTO>> GetEstacionamentoAsync()
         {
-            var estacionamentos = await _contexto.Estacionamentos.ToListAsync();
+            var estacionamentos = await _estacionamentoRepository.GetAllAsync();
             return _mapper.Map<List<EstacionamentoConfigResponseDTO>>(estacionamentos);
         }
 
         public async Task<EstacionamentoConfigResponseDTO> GetEstacionamentoByIdAsync(int id)
         {
-            var estacionamento = await _contexto.Estacionamentos.FindAsync(id);
-            if(estacionamento == null)
+            var estacionamento = await _estacionamentoRepository.GetByIdAsync(id);
+            if (estacionamento == null)
             {
                 return null;
             }
             return _mapper.Map<EstacionamentoConfigResponseDTO>(estacionamento);
         }
 
-        public async Task<EstacionamentoConfigResponseDTO> UpdateEstacionamento(int id, EstacionamentoConfigUpdateDTO estacionamentoUpdateDTO)
+        public async Task<EstacionamentoConfigResponseDTO?> UpdateEstacionamentoAsync(int id,EstacionamentoConfigUpdateDTO dto)
         {
-            var estacionamento = await _contexto.Estacionamentos.FindAsync(id);
-            if(estacionamento == null)
-            {
+            var estacionamento = await _estacionamentoRepository.GetByIdAsync(id);
+            if (estacionamento == null){
                 return null;
             }
-            if(estacionamentoUpdateDTO.CapacidadeMaxima != 0)
-            {
-                estacionamento.CapacidadeMaxima = estacionamentoUpdateDTO.CapacidadeMaxima;
+            if (!string.IsNullOrEmpty(dto.Localizacao)){
+                estacionamento.Localizacao = dto.Localizacao;
             }
-            if(estacionamentoUpdateDTO.HorarioAbertura != TimeSpan.Zero)
-            {
-                estacionamento.HorarioAbertura = estacionamentoUpdateDTO.HorarioAbertura;
+            if(dto.CapacidadeMaxima > 0){
+                estacionamento.CapacidadeMaxima = dto.CapacidadeMaxima;
             }
-            if(estacionamentoUpdateDTO.HorarioFechamento != TimeSpan.Zero)
-            {
-                estacionamento.HorarioFechamento = estacionamentoUpdateDTO.HorarioFechamento;
+            if(dto.PrecoHora > 0){
+                estacionamento.PrecoPorHora = dto.PrecoHora;
             }
-            if(estacionamentoUpdateDTO.PrecoHora > 0)
-            {
-                estacionamento.PrecoPorHora = estacionamentoUpdateDTO.PrecoHora;
+            if(dto.HorarioAbertura != TimeSpan.Zero){
+                estacionamento.HorarioAbertura = dto.HorarioAbertura;
             }
-            await _contexto.SaveChangesAsync();
+            await _estacionamentoRepository.UpdateAsync(estacionamento);
+
             return _mapper.Map<EstacionamentoConfigResponseDTO>(estacionamento);
         }
     }

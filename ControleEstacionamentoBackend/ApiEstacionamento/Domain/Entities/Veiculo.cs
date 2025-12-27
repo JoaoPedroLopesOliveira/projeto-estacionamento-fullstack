@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ApiEstacionamento.Entities
+namespace ApiEstacionamento.Domain.Entities
 {
     public class Veiculo
     {

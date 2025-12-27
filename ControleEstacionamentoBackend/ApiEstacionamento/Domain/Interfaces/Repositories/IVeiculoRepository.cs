@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiEstacionamento.Entities;
+using ApiEstacionamento.Domain.Entities;
 using ApiEstacionamento.Infrastructure.Persistence.Entitites;
 
 namespace ApiEstacionamento.Domain.Interfaces.Repositories

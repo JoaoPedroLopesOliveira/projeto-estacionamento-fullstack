@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiEstacionamento.DbContext;
+using ApiEstacionamento.Infrastructure.Persistence.DbContext;
 using ApiEstacionamento.Domain.Interfaces.Repositories;
-using ApiEstacionamento.Entities;
+using ApiEstacionamento.Domain.Entities;
 using ApiEstacionamento.Infrastructure.Persistence.Entitites;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +41,8 @@ namespace ApiEstacionamento.Infrastructure.Persistence.Repositories
         public async Task<Veiculo?> GetByIdAsync(int id)
         {
             var entity = await _context.Veiculos.FindAsync(id);
-            return entity == null ? null : _mapper.Map<Veiculo>(entity);
+            if (entity == null) return null;
+            return _mapper.Map<Veiculo>(entity);
         }
 
         public async Task UpdateAsync(Veiculo veiculo)
@@ -52,8 +53,6 @@ namespace ApiEstacionamento.Infrastructure.Persistence.Repositories
             entity.Placa = veiculo.Placa;
             entity.Modelo = veiculo.Modelo;
             entity.Cor = veiculo.Cor;
-            entity.ClienteId = veiculo.ClienteId;
-
             await _context.SaveChangesAsync();
         }
 

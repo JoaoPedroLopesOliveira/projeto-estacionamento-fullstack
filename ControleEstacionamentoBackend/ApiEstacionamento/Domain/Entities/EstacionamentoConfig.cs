@@ -2,29 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiEstacionamento.Entities
+namespace ApiEstacionamento.Domain.Entities
 {
     public class EstacionamentoConfig
     {
-        [Key]
-        public int Id { get; set; }
+        public int Id { get; set; } 
+  
+        public string Localizacao { get; set; } = null!;
 
-        [Required]
-        public string Localizacao { get; set; }
+        public int CapacidadeMaxima { get; set; } = 0;
 
-        [Required]
-        public int CapacidadeMaxima { get; set; }
+        public decimal PrecoPorHora { get; set; } = 0;
 
-        [Required]
-        public decimal PrecoPorHora { get; set; }
+        public TimeSpan HorarioAbertura { get; set; } = TimeSpan.Zero;
 
-        [Required]
-        public TimeSpan HorarioAbertura { get; set; }
+        public TimeSpan HorarioFechamento { get; set; } = TimeSpan.Zero;
 
-        [Required]
-        public TimeSpan HorarioFechamento { get; set; }
-
-        // RELACIONAMENTOS
         public List<Plano> Planos { get; set; }
         public List<Ticket> Tickets { get; set; }
     }

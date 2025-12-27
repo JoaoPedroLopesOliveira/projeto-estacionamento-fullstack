@@ -2,43 +2,54 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiEstacionamento.DbContext;
+using ApiEstacionamento.Infrastructure.Persistence.DbContext;
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Interfaces;
-using ApiEstacionamento.Entities;
+using ApiEstacionamento.Domain.Entities;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ApiEstacionamento.Domain.Interfaces.Repositories;
 
 namespace ApiEstacionamento.Services
 {
     public class PlanoService : IPlanoService
     {
 
-        private readonly EstacionamentoContext _contexto;
+        private readonly IPlanoRepositiorie _planoRepository;
         private readonly Mapper _mapper; 
-
-        public PlanoService(EstacionamentoContext context, IMapper mapper)
+        public PlanoService(IPlanoRepositiorie planoRepositiorie, IMapper mapper)
         {
-            _contexto = context;
+            _planoRepository = planoRepositiorie;
             _mapper = (Mapper)mapper;
         }
+
         public async Task<PlanoResponseDTO> CreatePlanoAsync(PlanoCreateDTO planoCreateDTO)
         {
             var plano = _mapper.Map<Plano>(planoCreateDTO);
-            _contexto.Planos.Add(plano);
-            await _contexto.SaveChangesAsync();
+            await _planoRepository.CreateAsync(plano);
             return _mapper.Map<PlanoResponseDTO>(plano);
+        }
+
+        public async Task<bool> DeletePlanoAsync(int id)
+        {
+            var existente = await _planoRepository.GetByIdAsync(id);
+            if (existente == null)
+            {
+                return false;
+            }
+            await _planoRepository.DeleteAsync(id);
+            return true;
         }
 
         public async Task<List<PlanoResponseDTO>> GetAllPlanosAsync()
         {
-            var planos = await _contexto.Planos.ToListAsync();
+            var planos = await _planoRepository.GetAllAsync();
             return _mapper.Map<List<PlanoResponseDTO>>(planos);
         }
 
         public async Task<PlanoResponseDTO> GetPlanoByIdAsync(int idPlano)
         {
-            var plano = await _contexto.Planos.FindAsync(idPlano);
+            var plano = await _planoRepository.GetByIdAsync(idPlano);
             if (plano == null)
             {
                 return null;
@@ -46,12 +57,16 @@ namespace ApiEstacionamento.Services
             return _mapper.Map<PlanoResponseDTO>(plano);
         }
 
-        public async Task<PlanoResponseDTO> UpdatePlanoAsync(int id,PlanoUpdateDTO planoUpdateDTO)
+        public async Task<PlanoResponseDTO> UpdatePlanoAsync(int id, PlanoUpdateDTO planoUpdateDTO)
         {
-            var plano = await _contexto.Planos.FindAsync(id);
-            if(plano == null)
+            var plano = await _planoRepository.GetByIdAsync(id);
+            if (plano == null)
             {
                 return null;
+            }
+            if (!string.IsNullOrEmpty(planoUpdateDTO.Description))
+            {
+                plano.Description = planoUpdateDTO.Description;
             }
             if (!string.IsNullOrEmpty(planoUpdateDTO.Nome))
             {
@@ -61,35 +76,17 @@ namespace ApiEstacionamento.Services
             {
                 plano.Tipo = planoUpdateDTO.Tipo;
             }
-            if (planoUpdateDTO.Preco != (decimal)0.00)
+            if(planoUpdateDTO.Preco > 0)
             {
                 plano.Preco = planoUpdateDTO.Preco;
             }
-            if (planoUpdateDTO.QuantidadeVeiculosPermitidos != 0)
+            if(planoUpdateDTO.QuantidadeVeiculosPermitidos > 0)
             {
-                plano.QuantidadeVeiculosPermitidos= planoUpdateDTO.QuantidadeVeiculosPermitidos;
+                plano.QuantidadeVeiculosPermitidos = planoUpdateDTO.QuantidadeVeiculosPermitidos;
             }
-            if (!string.IsNullOrEmpty(planoUpdateDTO.Description))
-            {
-                plano.Description = planoUpdateDTO.Description;
-            }
-            if (planoUpdateDTO.localizacoesPermitidas != null)
-            {
-                plano.localizacoesPermitidas = planoUpdateDTO.localizacoesPermitidas;
-            }
-            await _contexto.SaveChangesAsync();
+
+            await _planoRepository.UpdateAsync(plano);
             return _mapper.Map<PlanoResponseDTO>(plano);
-        }
-        public async Task<bool> DeletePlanoAsync(int id)
-        {
-            var plano = await _contexto.Planos.FindAsync(id);
-            if(plano == null)
-            {
-                return false;
-            }
-            _contexto.Planos.Remove(plano);
-            await _contexto.SaveChangesAsync();
-            return true;
         }
     }
 }

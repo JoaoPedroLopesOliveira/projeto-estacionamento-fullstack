@@ -39,7 +39,7 @@ namespace ApiEstacionamento.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPlanosAsync()
         {
-            var planos = _planoService.GetAllPlanosAsync();
+            var planos = await _planoService.GetAllPlanosAsync();
             return Ok(planos);
         }
 

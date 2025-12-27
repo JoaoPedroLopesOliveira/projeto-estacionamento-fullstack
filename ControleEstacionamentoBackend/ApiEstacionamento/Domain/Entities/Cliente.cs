@@ -1,25 +1,20 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiEstacionamento.Entities
+namespace ApiEstacionamento.Domain.Entities
 {
     public class Cliente
     {
-        [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = null!;
 
-        [Required]
-        [StringLength(11)]
-        public string Cpf { get; set; }
+        public string Cpf { get; set; } = null!;
 
-        [Required]
-        public string Telefone { get; set; }
+        public string Telefone { get; set; } = null!;
 
-        public List<Veiculo> Veiculos { get; set; }
+        public List<Veiculo> Veiculos { get; set; } = new();
 
-        public List<ClientePlano> HistoricoDePlanos { get; set; }
+        public List<ClientePlano> HistoricoDePlanos { get; set; } = new();
     }
 }

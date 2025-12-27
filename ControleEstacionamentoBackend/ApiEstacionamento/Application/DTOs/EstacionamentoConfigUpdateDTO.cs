@@ -8,6 +8,7 @@ namespace ApiEstacionamento.DTOs
     public class EstacionamentoConfigUpdateDTO
     {
         public int CapacidadeMaxima { get; set; }
+        public string Localizacao { get; set; }
         public decimal PrecoHora { get; set; }
         public TimeSpan HorarioAbertura { get; set; }
         public TimeSpan HorarioFechamento { get; set; }        

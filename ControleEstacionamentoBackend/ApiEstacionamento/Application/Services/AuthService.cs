@@ -2,75 +2,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiEstacionamento.DbContext;
+using ApiEstacionamento.Application.Interfaces.Services;
+using ApiEstacionamento.Domain.Interfaces.Repositories;
 using ApiEstacionamento.DTOs;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
-using ApiEstacionamento.Enuns;
-using ApiEstacionamento.Entities;
+using ApiEstacionamento.Infrastructure.Security;
+using ApiEstacionamento.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
-namespace ApiEstacionamento.Services
+namespace ApiEstacionamento.Application.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
-        private readonly EstacionamentoContext _context;
-        private readonly IConfiguration _configuration;
-        public AuthService(EstacionamentoContext context, IConfiguration configuration)
+        private readonly IAdministradorRepository _administradorRepository;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly ITokenService _tokenService;
+
+        public AuthService(IAdministradorRepository administradorRepository, IPasswordHasher passwordHasher, ITokenService tokenService)
         {
-            _context = context;
-            _configuration = configuration;
+            _administradorRepository = administradorRepository;
+            _passwordHasher = passwordHasher;
+            _tokenService = tokenService;
         }
 
-        public async Task<LoginResponseDTO> LoginAsync(LoginRequestDTO loginRequest)
+        public async Task<LoginResponseDTO> GetAdministradorByLoginAsync(LoginRequestDTO loginRequestDTO)
         {
-            var administrador = await _context.Administradores
-                .FirstOrDefaultAsync(a => a.Login == loginRequest.Login);
+            var admin = await _administradorRepository.GetByLoginAsync(loginRequestDTO.Login);
 
-            if (administrador == null)
-                throw new Exception("Administrador não encontrado.");
-
-            if (!BCrypt.Net.BCrypt.Verify(loginRequest.Senha, administrador.SenhaHash))
-                throw new Exception("Senha incorreta.");
-
-            var token = GerarToken(administrador);
+            if(admin == null || !_passwordHasher.Verify(loginRequestDTO.Senha, admin.SenhaHash))
+            {
+                throw new UnauthorizedAccessException("Login ou senha invalidos.");
+            }
 
             return new LoginResponseDTO
             {
-                Token = token,
+                Token = _tokenService.GenerateToken(admin),
                 Expiration = DateTime.UtcNow.AddHours(2)
             };
-        }
 
-        private string GerarToken(Administrador administrador)
-        {
-            var claims = new[]
-            {
-            new Claim(ClaimTypes.NameIdentifier, administrador.Id.ToString()),
-            new Claim(ClaimTypes.Name, administrador.Login),
-            new Claim(ClaimTypes.Role, Enum.GetName(typeof(NivelAdministrador), administrador.Nivel)!)
-        };
-
-            var jwtKey = _configuration["Jwt:Key"]
-                ?? throw new Exception("JWT Key não configurada");
-
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtKey)
-            );
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.UtcNow.AddHours(2),
-                signingCredentials: creds
-            );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

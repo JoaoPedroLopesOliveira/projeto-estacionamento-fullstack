@@ -1,28 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ApiEstacionamento.Services;
+using ApiEstacionamento.Application.DTOs;
+using ApiEstacionamento.Application.Interfaces.Services;
+using ApiEstacionamento.DTOs;
+using ApiEstacionamento.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiEstacionamento.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class LoginController : ControllerBase
+    [Route("api/auth")]
+    public class AuthController : ControllerBase
     {
-        private readonly AuthService authService;
-        public LoginController(AuthService authService)
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
         {
-            this.authService = authService;
+            _authService = authService;
         }
 
-        [HttpPost]
-        [Route("login")]
-        public async Task<IActionResult> Login([FromBody] DTOs.LoginRequestDTO loginRequestDTO)
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
-            var loginResponse = await authService.LoginAsync(loginRequestDTO);
-            return Ok(loginResponse);
+            var response = await _authService.GetAdministradorByLoginAsync(request);
+            return Ok(response);
         }
     }
 }

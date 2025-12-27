@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiEstacionamento.Entities;
+using ApiEstacionamento.Domain.Entities;
 
 namespace ApiEstacionamento.DTOs
 {
@@ -22,8 +22,6 @@ namespace ApiEstacionamento.DTOs
 
         //null para ser valido em todos os estacionamentos
         public EstacionamentoConfig? estacionamentoConfig;
-
-        public List<string> localizacoesPermitidas {get;set;}
         
     }
 }

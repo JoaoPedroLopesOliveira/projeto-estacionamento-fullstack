@@ -1,8 +1,8 @@
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Interfaces;
 using ApiEstacionamento.Domain.Interfaces.Repositories;
-using ApiEstacionamento.Entities;
 using AutoMapper;
+using ApiEstacionamento.Domain.Entities;
 
 namespace ApiEstacionamento.Services
 {

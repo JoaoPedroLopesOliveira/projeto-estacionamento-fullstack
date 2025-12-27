@@ -2,11 +2,10 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using ApiEstacionamento.Enuns;
 
-namespace ApiEstacionamento.Entities
+namespace ApiEstacionamento.Domain.Entities
 {
     public class Ticket
     {
-        [Key]
         public int Id { get; set; }
 
         public int VeiculoId { get; set; }

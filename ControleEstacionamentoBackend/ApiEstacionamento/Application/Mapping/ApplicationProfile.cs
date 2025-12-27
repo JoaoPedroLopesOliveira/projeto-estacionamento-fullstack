@@ -1,6 +1,8 @@
 using AutoMapper;
 using ApiEstacionamento.DTOs;
-using ApiEstacionamento.Entities;
+using ApiEstacionamento.Domain.Entities;
+using ApiEstacionamento.Application.DTOs;
+
 public class ApplicationProfile : Profile
 {
     public ApplicationProfile()

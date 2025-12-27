@@ -22,5 +22,7 @@ namespace ApiEstacionamento.Infrastructure.Persistence.Entitites
         [Required]
         public string Cor {get;set;}= null!;
         public int? ClienteId {get; set;}
+        public ClienteEntity? Cliente {get; set;}
+        public ICollection<TicketEntity> Tickets { get; private set; } = new List<TicketEntity>();
     }
 }

@@ -1,56 +1,53 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ApiEstacionamento.DbContext;
-using ApiEstacionamento.DTOs;
-using ApiEstacionamento.Interfaces;
-using ApiEstacionamento.Entities;
+
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using ApiEstacionamento.Domain.Entities;
+using ApiEstacionamento.Interfaces;
+using ApiEstacionamento.Domain.Interfaces.Repositories;
+using ApiEstacionamento.DTOs;
 
 namespace ApiEstacionamento.Services
 {
     public class ClienteService : IClienteService
     {
-        readonly EstacionamentoContext _context;
+
+        private readonly IClienteRepositorie _clienteRepository;
         readonly Mapper _mapper;
 
-        public ClienteService(EstacionamentoContext context, IMapper mapper)
+        public ClienteService(IClienteRepositorie clienteRepository, IMapper mapper)
         {
-            _context = context;
+
             _mapper = (Mapper)mapper;
+            _clienteRepository = clienteRepository;
         }
 
         public async Task<ClienteResponseDTO> CreateClienteAsync(ClienteCreateDTO clienteCreateDTO)
         {
             var cliente = _mapper.Map<Cliente>(clienteCreateDTO);
-            _context.Clientes.Add(cliente);
-            await _context.SaveChangesAsync();
+            await _clienteRepository.CreateClienteAsync(cliente);
             return _mapper.Map<ClienteResponseDTO>(cliente);
         }
 
         public async Task<bool> DeleteClienteAsync(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            if(cliente == null)
-            {
+            var existente = await _clienteRepository.GetByIdAsync(id);
+            if (existente == null)
                 return false;
-            }
-            _context.Clientes.Remove(cliente);
+
+            await _clienteRepository.DeleteAsync(id);
             return true;
         }
 
         public async Task<List<ClienteResponseDTO>> GetAllAsync()
         {
-            var clientes = await _context.Clientes.ToListAsync();
+            var clientes = await _clienteRepository.GetAllAsync();
             return _mapper.Map<List<ClienteResponseDTO>>(clientes);
         }
 
         public async Task<ClienteResponseDTO> GetClienteAsync(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            if(cliente == null)
+            var cliente = await _clienteRepository.GetByIdAsync(id);
+            if (cliente == null)
             {
                 return null;
             }
@@ -58,25 +55,20 @@ namespace ApiEstacionamento.Services
         }
         public async Task<ClienteResponseDTO> UpdateClienteAsync(int id, ClienteUpdateDTO clienteUpdateDTO)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            if(cliente == null)
-            {
+            var cliente = await _clienteRepository.GetByIdAsync(id);
+            if (cliente == null)
                 return null;
-            }
+
             if (!string.IsNullOrEmpty(clienteUpdateDTO.Nome))
-            {
                 cliente.Nome = clienteUpdateDTO.Nome;
-            }
+
             if (!string.IsNullOrEmpty(clienteUpdateDTO.Cpf))
-            {
                 cliente.Cpf = clienteUpdateDTO.Cpf;
-            }
+
             if (!string.IsNullOrEmpty(clienteUpdateDTO.Telefone))
-            {
                 cliente.Telefone = clienteUpdateDTO.Telefone;
-            }
-            _context.Clientes.Update(cliente);
-            _context.SaveChanges();
+
+            await _clienteRepository.UpdateAsync(cliente);
             return _mapper.Map<ClienteResponseDTO>(cliente);
         }
 
@@ -103,16 +95,7 @@ namespace ApiEstacionamento.Services
         }
         public async Task<List<VeiculoResponseDTO>> GetVeiculosDoClienteAsync(int ClienteId)
         {
-            var clienteExiste = await _context.Clientes.AnyAsync(c => c.Id == ClienteId);
-            if (!clienteExiste)
-            {
-                throw new Exception("Cliente não encontrado");
-            }
-            var veiculos = await _context.Veiculos
-                .Where(v => v.ClienteId == ClienteId)
-                .ToListAsync();
-
-            return _mapper.Map<List<VeiculoResponseDTO>>(veiculos);
+            throw new NotImplementedException();
         }
     }
 }

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiEstacionamento.DTOs;
 using ApiEstacionamento.Interfaces;
-using ApiEstacionamento.Entities;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc; 
 
 namespace ApiEstacionamento.Controllers
 {
@@ -44,7 +44,7 @@ namespace ApiEstacionamento.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEstacionamento(int id, EstacionamentoConfigUpdateDTO estacionamentoConfigUpdateDTO)
         {
-            var estacionamentoUpdate = await _estacionamentoService.UpdateEstacionamento(id, estacionamentoConfigUpdateDTO);
+            var estacionamentoUpdate = await _estacionamentoService.UpdateEstacionamentoAsync(id, estacionamentoConfigUpdateDTO);
             if(estacionamentoUpdate == null)
             {
                 throw new Exception("estacionamento não encontrado.");

@@ -8,7 +8,7 @@ namespace ApiEstacionamento.DTOs
     public class TicketResponseDTO
     {
         public int Id { get; set; }
-        public string PlacaVeiculo { get; set; }
+        public string Placa { get; set; } = null!;
         public DateTime HoraEntrada { get; set; }
         public DateTime? HoraSaida { get; set; }
 
@@ -16,7 +16,7 @@ namespace ApiEstacionamento.DTOs
 
         public bool CobradoPorPlano { get; set; }
 
-        public EstacionamentoConfigResponseDTO EstacionamentoConfig { get; set; }
+        public EstacionamentoConfigResponseDTO EstacionamentoConfig { get; set; } = null!;
 
     }
 }

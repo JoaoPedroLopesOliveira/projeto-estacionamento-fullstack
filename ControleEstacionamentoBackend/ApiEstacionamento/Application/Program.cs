@@ -1,5 +1,5 @@
 using ApiEstacionamento;
-using ApiEstacionamento.DbContext;
+using ApiEstacionamento.Infrastructure.Persistence.DbContext;
 using ApiEstacionamento.Interfaces;
 using ApiEstacionamento.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,22 +9,32 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using ApiEstacionamento.Entities;
 using ApiEstacionamento.Domain.Interfaces.Repositories;
 using ApiEstacionamento.Infrastructure.Persistence.Repositories;
-using ApiEstacionamento.Domain.Mappings;
+using ApiEstacionamento.Infrastructure.Mappings;
+using ApiEstacionamento.Infrastructure.Security;
+using ApiEstacionamento.Application.Interfaces.Services;
+using ApiEstacionamento.Infrastructure.Auth;
+using ApiEstacionamento.Application.Services;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IClienteRepositorie, ClienteRepository>();
 builder.Services.AddScoped<IEstacionamentoService, EstacionamentoService>();
+builder.Services.AddScoped<IEstacionamentoRepository, EstacionamentoRepository>();
 builder.Services.AddScoped<IPlanoService, PlanoService>();
+builder.Services.AddScoped<IPlanoRepositiorie, PlanoRepository>();
 builder.Services.AddScoped<IVeiculoService, VeiculosService>();
+builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IVeiculoRepository, VeiculoRepository>();
-builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IAdministradorService, AdministradorService>();
+builder.Services.AddScoped<IAdministradorRepository, AdministradorRepository>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

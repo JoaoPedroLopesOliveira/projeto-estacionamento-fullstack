@@ -7,7 +7,7 @@ namespace ApiEstacionamento.DTOs
 {
     public class LoginRequestDTO
     {
-        public string Login { get; set; }
-        public string Senha { get; set; }
+        public string Login { get; set; } = string.Empty;
+        public string Senha { get; set; } = string.Empty;
     }
 }

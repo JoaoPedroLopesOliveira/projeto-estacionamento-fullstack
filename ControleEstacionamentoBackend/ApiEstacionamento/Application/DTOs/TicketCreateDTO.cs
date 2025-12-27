@@ -9,6 +9,10 @@ namespace ApiEstacionamento.DTOs
     public class TicketCreateDTO
     {
         [Required]
-        public string PlacaVeiculo { get; set; }
+        public int VeiculoId { get; set; }
+
+        [Required]
+        public int EstacionamentoConfigId { get; set; }
+        
     }
 }
